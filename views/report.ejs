@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .t-center {
+            text-align: center;
+        }
+        .t-left {
+            text-align: left;
+        }
+        .heading {
+            font-size: 1rem;
+            margin: auto;
+        }
+        .user-heading {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .location-heading {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        .border-around {
+            border: 1px solid black;
+            padding: 10px;
+            width: 70%;
+            margin: auto;
+        }
+        .table {
+            margin: auto;
+            width: 100%;
+            table-layout: auto;
+            font-size: 1rem;
+        }
+        tr, th, td {
+            font-size: 1rem;
+        }
+        .total {
+            display: flex;
+            justify-content: space-evenly;
+            margin-top: 10px;
+        }
+        .mb-2 {
+            margin-bottom: 5px;
+        }
+        .fw-bold {
+            font-weight: 600;
+        }
+        .d-flex {
+            display: flex;
+        }
+        .justify-content-between {
+            justify-content: space-between;
+        }
+        .s-box {
+            border: 1px solid black;
+            padding: 5px;
+            width: 40%;
+        }
+    </style>
+    <!-- <link rel="stylesheet" href="invoice.css"> -->
+</head>
+
+<body style="padding: 3rem">
+    <div class="border-around">
+        <div class="heading t-center">
+            <span class="fw-bold">Sales Summary Report</span>
+            <div class="user-heading">
+                <span>User : <% if (reportHeaderData) { %>
+                    <%= reportHeaderData.nsEmployeeId %>
+                  <% } %></span>
+                <span>Date : <% if (reportHeaderData) { %>
+                    <%= reportHeaderData.reportDate %>
+                  <% } %></span>
+            </div>
+            <div class="location-heading">
+                <span>Location : <% if (reportHeaderData) { %>
+                    <%= reportHeaderData.routeName %>
+                  <% } %></span>
+                <span>Route Batch : <% if (reportHeaderData) { %>
+                    <%= reportHeaderData.bacthId %>
+                  <% } %></span>
+            </div>
+            <hr />
+        </div>
+        <div class="d-sales t-center fw-bold">
+            <span>Delivered Sales Documents</span>
+        </div>
+        <div>
+            <span class="fw-bold">Customer</span>
+        </div>
+        <div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="t-left">Document Number</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% reportDeliveredOrder.forEach(function(item) { %>
+                        <tr>
+                            <td colspan="3" class="t-left">
+                                <%= item.companyName %>
+                            </td>
+                        </tr>
+                        <tr class="t-center mb-2">
+                            <td class="t-left">
+                                <%= item.nsDocumentNumber %>
+                            </td>
+                            <td>
+                                <%= item.completed_At %>
+                            </td>
+                            <td>
+                                $<%= item.amountPaid %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+            <div class="total">
+                <span>Total</span>
+                <span>
+                    <% 
+                    let deliveredTotalAmount = reportDeliveredOrder.reduce(function (acc, curr) { 
+                        acc = acc + curr.amountPaid
+                        return acc
+                    }, 0)
+                    %>
+                    $ <%= deliveredTotalAmount.toFixed(2) %>
+                </span>
+            </div>
+            <hr />
+        </div>
+        <div class="d-sales t-center fw-bold">
+            <span>Undelivered Transaction Details</span>
+        </div>
+        <div>
+            <span class="fw-bold">Customer</span>
+        </div>
+        <div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="t-left">Document Number</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% reportUndeliveredOrder.forEach(function(item) { %>
+                        <tr>
+                            <td colspan="3" class="t-left">
+                                <%= item.companyName %>
+                            </td>
+                        </tr>
+                        <tr class="t-center mb-2">
+                            <td class="t-left">
+                                <%= item.nsDocumentNumber %>
+                            </td>
+                            <td>
+                                <%= item.completed_At %>
+                            </td>
+                            <td>
+                                $<%= item.invoiceRemainingAmount %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+            <div class="total">
+                <span>Total</span>
+                <span>
+                    <% 
+                    let undeliveredTotalAmount = reportUndeliveredOrder.reduce(function (acc, curr) { 
+                        acc = acc + curr.invoiceRemainingAmount
+                        return acc
+                    }, 0)
+                    %>
+                    $ <%= undeliveredTotalAmount.toFixed(2) %>
+                </span>
+            </div>
+            <hr />
+        </div>
+        <!-- <div class="d-sales t-center fw-bold">
+            <span>SURVEYS</span>
+        </div>
+        <div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="t-left">Customer</th>
+                        <th>Address</th>
+                        <th>Survey Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="t-center mb-2">
+                        <td class="t-left">
+                            820280
+                        </td>
+                        <td>
+                            400 FIELD DR
+                        </td>
+                        <td>
+                            Skip Visit
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="t-left">
+                            <div style="margin-bottom: 25px;">
+                                <div>Reason for skip?</div>
+                                <div>Closed-COVID suspend not open</div>
+                                <div>Additional Notes (Required)</div>
+                                <div>Not ready for delivery. Stop invoice.start 11/8/21</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="t-center mb-2">
+                        <td class="t-left">
+                            820280
+                        </td>
+                        <td>
+                            400 FIELD DR
+                        </td>
+                        <td>
+                            Skip Visit
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="t-left">
+                            <div style="margin-bottom: 25px;">
+                                <div>Reason for skip?</div>
+                                <div>Closed-COVID suspend not open</div>
+                                <div>Additional Notes (Required)</div>
+                                <div>Not ready for delivery. Stop invoice.start 11/8/21</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="t-center mb-2">
+                        <td class="t-left">
+                            820280
+                        </td>
+                        <td>
+                            400 FIELD DR
+                        </td>
+                        <td>
+                            Skip Visit
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="t-left">
+                            <div style="margin-bottom: 25px;">
+                                <div>Reason for skip?</div>
+                                <div>Closed-COVID suspend not open</div>
+                                <div>Additional Notes (Required)</div>
+                                <div>Not ready for delivery. Stop invoice.start 11/8/21</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="t-center mb-2">
+                        <td class="t-left">
+                            820280
+                        </td>
+                        <td>
+                            400 FIELD DR
+                        </td>
+                        <td>
+                            Skip Visit
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="t-left">
+                            <div style="margin-bottom: 25px;">
+                                <div>Reason for skip?</div>
+                                <div>Closed-COVID suspend not open</div>
+                                <div>Additional Notes (Required)</div>
+                                <div>Not ready for delivery. Stop invoice.start 11/8/21</div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr />
+        </div> -->
+
+        <div>
+            <div class="d-sales t-center fw-bold">
+                <span>Payment Details</span>
+            </div>
+            <div class="fw-bold">
+                Customer
+            </div>
+            <div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="t-left">Pmt Type</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Doc Num (Amount)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% reportPaymentData.forEach(function(item) { %>
+                            <tr>
+                                <td colspan="3" class="t-left">
+                                    <div>
+                                        <%= item.companyName %>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="t-center mb-2">
+                                <td class="t-left">
+                                    <%= item.paymentType %>
+                                </td>
+                                <td>
+                                    <%= item.paymentDate %>
+                                </td>
+                                <td>
+                                    $<%= item.invoiceRemainingAmount %>
+                                </td>
+                                <td>
+                                    Apply to : <%= item.nsDocumentNumber %> ($<%= item.amountPaid %>)
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+                <div class="total">
+                    <span>Total</span>
+                    <span>
+                        <% 
+                        let paymentTotalAmount = reportPaymentData.reduce(function (acc, curr) { 
+                            acc = acc + curr.amountPaid
+                            return acc
+                        }, 0)
+                        %>
+                        $ <%= paymentTotalAmount.toFixed(2) %>
+                    </span>
+                </div>
+                <hr />
+            </div>
+        </div>
+
+        <div>
+            <div class="d-sales t-center fw-bold">
+                <span>Payment Summary</span>
+            </div>
+            <div>
+                <div class="d-flex justify-content-between">
+                    <span class="fw-bold">Type</span>
+                    <span class="fw-bold">Amount</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Cash</span>
+                    <span>
+                        <% 
+                        let cashTotalAmount = reportPaymentData.reduce(function (acc, curr) { 
+                            if(curr.paymentType === 'Cash') {
+                                acc = acc + curr.amountPaid
+                            }
+                            return acc
+                        }, 0)
+                        %>
+                        $ <%= cashTotalAmount.toFixed(2) %>
+                    </span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Check</span>
+                    <span>
+                        <% 
+                        let checkTotalAmount = reportPaymentData.reduce(function (acc, curr) { 
+                            if(curr.paymentType === 'Check') {
+                                acc = acc + curr.amountPaid
+                            }
+                            return acc
+                        }, 0)
+                        %>
+                        $ <%= checkTotalAmount.toFixed(2) %>
+                    </span>
+                </div>    
+                <div class="d-flex justify-content-between">
+                    <span>Total Collected</span>
+                    <span>$<%= cashTotalAmount + checkTotalAmount %></span>
+                </div>            
+                <div class="d-flex justify-content-between">
+                    <span>Credit Card</span>
+                    <span>
+                        <% 
+                        let creditCardTotalAmount = reportPaymentData.reduce(function (acc, curr) { 
+                            if(curr.paymentType === 'Credit Card') {
+                                acc = acc + curr.amountPaid
+                            }
+                            return acc
+                        }, 0)
+                        %>
+                        $ <%= creditCardTotalAmount.toFixed(2) %>
+                    </span>
+                </div>
+            </div>
+            <hr />
+        </div>
+
+        <div>
+            <div class="d-sales t-center fw-bold">
+                <span>Route Summary</span>
+            </div>
+            <div>
+                <div class="d-flex justify-content-between">
+                    <span>Delivered Documents</span>
+                    <span>$<%= deliveredTotalAmount.toFixed(2) %></span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Undelivered Documents</span>
+                    <span>$<%= undeliveredTotalAmount.toFixed(2) %></span>
+                </div>
+                <!-- <div class="d-flex justify-content-between">
+                    <span>New Documents</span>
+                    <span>$0.00</span>
+                </div> -->
+                <div class="d-flex justify-content-between">
+                    <span>Route Total</span>
+                    <span>$<%= deliveredTotalAmount + undeliveredTotalAmount %></span>
+                </div>
+            </div>
+            <hr />
+        </div>
+
+        <div>
+            <div class="d-sales t-center fw-bold">
+                <span>End Report</span>
+            </div>
+            <hr />
+            <div class="s-box mb-2">
+                <div class="t-center fw-bold">
+                    Cash Settlement Report
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>User : <% if (reportHeaderData) { %>
+                        <%= reportHeaderData.nsEmployeeId %>
+                      <% } %></span>
+                    <span>Date : <% if (reportHeaderData) { %>
+                        <%= reportHeaderData.reportDate %>
+                      <% } %></span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Location : <% if (reportHeaderData) { %>
+                        <%= reportHeaderData.routeName %>
+                      <% } %></span>
+                    <span>Route Batch : <% if (reportHeaderData) { %>
+                        <%= reportHeaderData.bacthId %>
+                      <% } %></span>
+                </div>
+                <hr class="fw-bold" />
+                <div class="fw-bold t-center">
+                    Cash
+                </div>
+            </div>
+            <hr />
+        </div>
+      </div>
+    </div>
+</body>
+
+</html>

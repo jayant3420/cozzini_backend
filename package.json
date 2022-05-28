@@ -1,0 +1,31 @@
+{
+  "name": "cozzini-rest-api",
+  "version": "1.0.0",
+  "description": "rest api of cozzini",
+  "main": "server.js",
+  "scripts": {
+    "start": "func start --verbose"
+  },
+  "keywords": [
+    "rest",
+    "api"
+  ],
+  "author": "Ravindra Singh",
+  "license": "ISC",
+  "dependencies": {
+    "@joi/date": "^2.1.0",
+    "azure-function-express": "^2.0.0",
+    "azure-storage": "^2.10.7",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.2",
+    "i18n": "^0.13.3",
+    "joi": "^17.5.0",
+    "moment": "^2.29.1",
+    "mssql": "^7.3.0",
+    "nodemon": "^2.0.15",
+    "sync-each": "^1.0.1"
+  }
+}
